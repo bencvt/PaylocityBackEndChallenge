@@ -17,15 +17,15 @@ public class PaycheckIntegrationTests : IntegrationTest
         var response = await HttpClient.GetAsync("/api/v1/paychecks/1/2025-12-25");
         var paycheck = new GetPaycheckDto
         {
-            GrossPay = 2900.8073076923076923076923077m,
-            NetPay = 2862.3457692307692307692307692m,
+            GrossPay = 2900.99m,
+            NetPay = 2862.49m,
             CheckDate = DateTime.Parse("2025-12-31"),
             PayPeriod = 26,
             Deductions = new List<GetDeductionDto>()
             {
                 new()
                 {
-                    Amount = 38.461538461538461538461538462m,
+                    Amount = 38.50m,
                     DeductionReason = DeductionReason.BaseBenefits,
                 },
             },

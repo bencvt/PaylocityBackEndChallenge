@@ -2,30 +2,37 @@
 
 namespace Api.Calculators;
 
+/// <summary>
+/// Generate a paycheck for the specified employee id, effective for the
+/// last day in the pay period containing the specified date.
+/// <para/>
+/// Throw an exception if the employee record has an invalid set of dependents.
+/// </summary>
 public class PaycheckCalculator
 {
     private readonly Employee _employee;
     private readonly DateTime _checkDate;
+    private readonly int _payPeriod;
 
     public PaycheckCalculator(Employee employee, DateTime date)
     {
         _employee = employee;
         _checkDate = PayPeriodCalculator.GetLastDayInPayPeriod(date);
+        _payPeriod = PayPeriodCalculator.GetPayPeriod(_checkDate);
     }
 
     public Paycheck Calculate()
     {
-        decimal grossPay = Spread(_employee.Salary);
+        decimal grossPay = SpreadAndRound(_employee.Salary);
         var deductions = CreateDeductions();
         decimal netPay = grossPay - deductions.Sum(x => x.Amount);
-        int payPeriod = PayPeriodCalculator.GetPayPeriod(_checkDate);
 
         return new()
         {
             GrossPay = grossPay,
             NetPay = netPay,
             CheckDate = _checkDate,
-            PayPeriod = payPeriod,
+            PayPeriod = _payPeriod,
             Deductions = deductions,
         };
     }
@@ -47,11 +54,11 @@ public class PaycheckCalculator
         return deductions;
     }
 
-    private static void AddBaseBenefitsDeduction(List<Deduction> deductions)
+    private void AddBaseBenefitsDeduction(List<Deduction> deductions)
     {
         deductions.Add(new()
         {
-            Amount = Spread(1_000m),
+            Amount = SpreadAndRound(1_000m),
             DeductionReason = DeductionReason.BaseBenefits,
         });
     }
@@ -62,7 +69,7 @@ public class PaycheckCalculator
         {
             deductions.Add(new()
             {
-                Amount = Spread(600),
+                Amount = SpreadAndRound(600m),
                 DeductionReason = DeductionReason.DependentBenefits,
                 Dependent = dependent,
             });
@@ -75,7 +82,7 @@ public class PaycheckCalculator
         {
             deductions.Add(new()
             {
-                Amount = Spread(_employee.Salary * 0.02m),
+                Amount = SpreadAndRound(_employee.Salary * 0.02m),
                 DeductionReason = DeductionReason.HighIncome,
             });
         }
@@ -89,7 +96,7 @@ public class PaycheckCalculator
             {
                 deductions.Add(new()
                 {
-                    Amount = Spread(200),
+                    Amount = SpreadAndRound(200m),
                     DeductionReason = DeductionReason.DependentAge,
                     Dependent = dependent,
                 });
@@ -97,8 +104,8 @@ public class PaycheckCalculator
         }
     }
 
-    private static decimal Spread(decimal amount)
+    private decimal SpreadAndRound(decimal amount)
     {
-        return amount / 26;
+        return RoundingCalculator.SpreadAndRound(amount, _payPeriod);
     }
 }

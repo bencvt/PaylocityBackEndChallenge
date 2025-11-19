@@ -36,15 +36,15 @@ public class PaycheckCalculatorTests
 
         var expected = new Paycheck()
         {
-            GrossPay = 2966.3461538461538461538461538m,
-            NetPay = 2927.8846153846153846153846153m,
+            GrossPay = 2966.50m,
+            NetPay = 2928.00m,
             CheckDate = DateTime.Parse("2025-12-31"),
             PayPeriod = 26,
             Deductions = new List<Deduction>()
             {
                 new()
                 {
-                    Amount = 38.461538461538461538461538462m,
+                    Amount = 38.50m,
                     DeductionReason = DeductionReason.BaseBenefits,
                 },
             },
@@ -85,32 +85,32 @@ public class PaycheckCalculatorTests
 
         var expected = new Paycheck()
         {
-            GrossPay = 6812.5m,
-            NetPay = 6560.8653846153846153846153846m,
+            GrossPay = 6812.50m,
+            NetPay = 6560.89m,
             CheckDate = DateTime.Parse("2025-05-06"),
             PayPeriod = 9,
             Deductions = new List<Deduction>()
             {
                 new()
                 {
-                    Amount = 38.461538461538461538461538462m,
+                    Amount = 38.46m,
                     DeductionReason = DeductionReason.BaseBenefits,
                 },
                 new()
                 {
-                    Amount = 23.076923076923076923076923077m,
+                    Amount = 23.07m,
                     DeductionReason = DeductionReason.DependentBenefits,
                     Dependent = childA,
                 },
                 new()
                 {
-                    Amount = 23.076923076923076923076923077m,
+                    Amount = 23.07m,
                     DeductionReason = DeductionReason.DependentBenefits,
                     Dependent = spouse,
                 },
                 new()
                 {
-                    Amount = 23.076923076923076923076923077m,
+                    Amount = 23.07m,
                     DeductionReason = DeductionReason.DependentBenefits,
                     Dependent = childB,
                 },
@@ -121,7 +121,7 @@ public class PaycheckCalculatorTests
                 },
                 new()
                 {
-                    Amount = 7.6923076923076923076923076923m,
+                    Amount = 7.69m,
                     DeductionReason = DeductionReason.DependentAge,
                     Dependent = spouse,
                 },

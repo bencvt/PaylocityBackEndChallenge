@@ -2,9 +2,11 @@
 
 public static class PayPeriodCalculator
 {
+    public const decimal NUM_PAY_PERIODS_PER_YEAR = 26;
+
     public static int GetPayPeriod(DateTime date)
     {
-        return (int)Math.Ceiling(date.DayOfYear * 26.0 / 365);
+        return (int)Math.Ceiling(date.DayOfYear * NUM_PAY_PERIODS_PER_YEAR / 365);
     }
 
     public static DateTime GetLastDayInPayPeriod(DateTime date)
