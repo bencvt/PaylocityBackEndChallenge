@@ -41,4 +41,9 @@ public class EmployeeRetriever : Retriever<Employee>
             yield return item;
         }
     }
+
+    public Employee RetrieveById(int id)
+    {
+        return QueryResults.Single(x => x.Id == id);
+    }
 }

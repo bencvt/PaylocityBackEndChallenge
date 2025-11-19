@@ -15,7 +15,25 @@ public class EmployeesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ApiResponse<GetEmployeeDto>>> Get(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var retriever = new EmployeeRetriever();
+            var employee = retriever.RetrieveById(id);
+            var data = employee.ConvertToGetEmployeeDto();
+            return Ok(new ApiResponse<GetEmployeeDto>
+            {
+                Data = data,
+                Success = true,
+            });
+        }
+        catch (Exception ex)
+        {
+            return NotFound(new ApiResponse<GetEmployeeDto>()
+            {
+                Error = ex.Message,
+                Success = false,
+            });
+        }
     }
 
     [SwaggerOperation(Summary = "Get all employees")]
@@ -27,20 +45,20 @@ public class EmployeesController : ControllerBase
             var retriever = new EmployeeRetriever();
             var employees = retriever.RetrieveAll();
             var data = employees.ConvertToGetEmployeeDtoList();
-            return new ApiResponse<List<GetEmployeeDto>>
+            return Ok(new ApiResponse<List<GetEmployeeDto>>
             {
                 Data = data,
                 Success = true,
                 Message = $"{data.Count} employees found",
-            };
+            });
         }
         catch (Exception ex)
         {
-            return new ApiResponse<List<GetEmployeeDto>>
+            return NotFound(new ApiResponse<List<GetEmployeeDto>>
             {
                 Error = ex.Message,
                 Success = false,
-            };
+            });
         }
     }
 }
