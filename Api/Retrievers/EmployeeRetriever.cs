@@ -34,16 +34,23 @@ public class EmployeeRetriever : Retriever<Employee>
 
     public override IEnumerable<Employee> RetrieveAll()
     {
-        foreach (var item in QueryResults)
+        foreach (var employee in QueryResults)
         {
-            var retriever = new DependentRetriever();
-            retriever.RetrieveForEmployee(item);
-            yield return item;
+            AddDependents(employee);
+            yield return employee;
         }
     }
 
     public Employee RetrieveById(int id)
     {
-        return QueryResults.Single(x => x.Id == id);
+        var employee = QueryResults.Single(x => x.Id == id);
+        AddDependents(employee);
+        return employee;
+    }
+
+    private void AddDependents(Employee employee)
+    {
+        var retriever = new DependentRetriever();
+        retriever.RetrieveForEmployee(employee);
     }
 }
