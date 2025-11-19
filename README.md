@@ -17,7 +17,7 @@ Here's a high level overview of the changes I made to implement the requirements
   * Includes integration tests.
   * For the purposes of this coding exercise, paychecks are only generated on the fly rather than pulled from a SQL database. The main class here is `PaycheckCalculator` rather than `PaycheckRetriever`. In an actual system, it would make sense to have both of those classes. The results of the calculator, when run by payroll rather than by an individual employee, would write to the database once the funds are sent. The retriever would then be used for past checks.
 
-* The `Calculations` classes are where I spent the most time making sure to follow clean code guidelines:
+* The `Calculators` classes are where I spent the most time making sure to follow clean code guidelines:
   * The classes and methods are as small and clear as possible.
   * I tried to keep each set of calculations in its own class, so there are five classes instead of one. Aside from being easier to read, it makes unit testing a lot cleaner too.
   * Unit tests are decently thorough.
@@ -41,7 +41,7 @@ In any case, here are the most important bits:
    * Net pay (gross minus deductions)
    * The check date (see above)
    * The current pay period (1 to 26, inclusive)
-   * A list detailing each deductions. This wasn't mentioned in the requirements and returning it from the API required a lot more infrastructure, but it's well worth it in my opinion. It's in everybody's interest to be transparent about how everything is calculated, and it makes validation and troubleshooting much easier.
+   * A list detailing each deduction. This wasn't mentioned in the requirements and returning it from the API required a lot more infrastructure, but it's well worth it in my opinion. It's in everybody's interest to be transparent about how everything is calculated, and it makes validation and troubleshooting much easier.
 
  * **What exactly does *"spread as evenly as possible on each paycheck"* mean, and what about rounding to the nearest cent?**
    * See `RoundingCalculator` and its unit test suite for the design I went with.
