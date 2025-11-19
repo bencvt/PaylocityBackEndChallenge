@@ -10,9 +10,9 @@ public static class RoundingCalculator
     /// The calculation for the final pay period of the year corrects any
     /// accumulated rounding errors.
     /// </summary>
-    public static decimal SpreadAndRound(decimal amount, int payPeriod)
+    public static decimal SpreadAndRound(CalculatorConfiguration settings, decimal amount, int payPeriod)
     {
-        decimal numPeriods = PayPeriodCalculator.NUM_PAY_PERIODS_PER_YEAR;
+        decimal numPeriods = settings.NumPayPeriodsPerYear;
 
         // Math.Floor here is an arbitrary choice.
         // It might make more sense to use Math.Round, or Math.Ceiling,

@@ -4,6 +4,7 @@ using Api.Dtos.Paycheck;
 using Api.Models;
 using Api.Retrievers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Api.Controllers;
@@ -12,6 +13,13 @@ namespace Api.Controllers;
 [Route("api/v1/[controller]")]
 public class PaychecksController : ControllerBase
 {
+    private readonly CalculatorConfiguration _settings;
+
+    public PaychecksController(IOptions<CalculatorConfiguration> settings)
+    {
+        _settings = settings.Value;
+    }
+
     [SwaggerOperation(Summary = "Get paycheck by employee id and date")]
     [HttpGet("{employeeId}/{date}")]
     public async Task<ActionResult<ApiResponse<GetPaycheckDto>>> Get(int employeeId, DateTime date)
@@ -21,7 +29,7 @@ public class PaychecksController : ControllerBase
             var retriever = new EmployeeRetriever();
             var employee = retriever.RetrieveById(employeeId);
 
-            var calculator = new PaycheckCalculator(employee, date);
+            var calculator = new PaycheckCalculator(_settings, employee, date);
             var paycheck = calculator.Calculate();
 
             var data = paycheck.ConvertToGetPaycheckDto();

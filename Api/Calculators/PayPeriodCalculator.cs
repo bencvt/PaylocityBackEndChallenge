@@ -1,15 +1,20 @@
 ﻿namespace Api.Calculators;
 
-public static class PayPeriodCalculator
+public class PayPeriodCalculator
 {
-    public const decimal NUM_PAY_PERIODS_PER_YEAR = 26;
+    private readonly CalculatorConfiguration _settings;
 
-    public static int GetPayPeriod(DateTime date)
+    public PayPeriodCalculator(CalculatorConfiguration settings)
     {
-        return (int)Math.Ceiling(date.DayOfYear * NUM_PAY_PERIODS_PER_YEAR / 365);
+        _settings = settings;
     }
 
-    public static DateTime GetLastDayInPayPeriod(DateTime date)
+    public int GetPayPeriod(DateTime date)
+    {
+        return (int)Math.Ceiling(date.DayOfYear * (double)_settings.NumPayPeriodsPerYear / 365);
+    }
+
+    public DateTime GetLastDayInPayPeriod(DateTime date)
     {
         int payPeriod = GetPayPeriod(date);
         var last = date;

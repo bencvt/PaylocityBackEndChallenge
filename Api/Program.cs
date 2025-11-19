@@ -1,3 +1,4 @@
+using Api;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy(allowLocalhost,
         policy => { policy.WithOrigins("http://localhost:3000", "http://localhost"); });
 });
+
+builder.Services.Configure<CalculatorConfiguration>(builder.Configuration.GetSection(nameof(CalculatorConfiguration)));
 
 var app = builder.Build();
 

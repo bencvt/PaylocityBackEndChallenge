@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ApiTests.UnitTests.Calculators;
 
-public class PaycheckCalculatorTests
+public class PaycheckCalculatorTests : UnitTest
 {
     [Fact]
     public void WhenCalculatingPaycheckWithInvalidDependentSet_ShouldThrowArgumentException()
@@ -18,7 +18,7 @@ public class PaycheckCalculatorTests
         };
         employee.Dependents.Add(new() { Relationship = Relationship.Spouse });
         employee.Dependents.Add(new() { Relationship = Relationship.Spouse });
-        var calculator = new PaycheckCalculator(employee, DateTime.Parse("2025-12-25"));
+        var calculator = new PaycheckCalculator(Settings, employee, DateTime.Parse("2025-12-25"));
 
         Assert.Throws<ArgumentException>(() => calculator.Calculate());
     }
@@ -30,7 +30,7 @@ public class PaycheckCalculatorTests
         {
             Salary = 77_125m,
         };
-        var calculator = new PaycheckCalculator(employee, DateTime.Parse("2025-12-25"));
+        var calculator = new PaycheckCalculator(Settings, employee, DateTime.Parse("2025-12-25"));
 
         var actual = calculator.Calculate();
 
@@ -79,7 +79,7 @@ public class PaycheckCalculatorTests
             DateOfBirth = DateTime.Parse("1974-01-02"),
         };
         employee.Dependents = new List<Dependent> { childA, spouse, childB };
-        var calculator = new PaycheckCalculator(employee, DateTime.Parse("2025-05-05"));
+        var calculator = new PaycheckCalculator(Settings, employee, DateTime.Parse("2025-05-05"));
 
         var actual = calculator.Calculate();
 

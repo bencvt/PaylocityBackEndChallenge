@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ApiTests.UnitTests.Calculators;
 
-public class DependentValidatorTests
+public class DependentValidatorTests : UnitTest
 {
     [Theory]
     [MemberData(nameof(ValidDependentSets))]
@@ -21,7 +21,7 @@ public class DependentValidatorTests
             });
         }
 
-        DependentValidator.ValidateDependents(employee);
+        DependentValidator.ValidateDependents(Settings, employee);
     }
 
     [Theory]
@@ -37,7 +37,7 @@ public class DependentValidatorTests
             });
         }
 
-        Assert.Throws<ArgumentException>(() => DependentValidator.ValidateDependents(employee));
+        Assert.Throws<ArgumentException>(() => DependentValidator.ValidateDependents(Settings, employee));
     }
 
     public static IEnumerable<object[]> ValidDependentSets => new List<object[]>

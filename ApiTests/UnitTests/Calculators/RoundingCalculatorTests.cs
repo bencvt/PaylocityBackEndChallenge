@@ -4,13 +4,13 @@ using Xunit;
 
 namespace ApiTests.UnitTests.Calculators;
 
-public class RoundingCalculatorTests
+public class RoundingCalculatorTests : UnitTest
 {
     [Theory]
     [MemberData(nameof(TestCases))]
     public void WhenSpreadingAndRounding_ShouldReturnCorrectValue(decimal amount, int payPeriod, decimal expected)
     {
-        decimal actual = RoundingCalculator.SpreadAndRound(amount, payPeriod);
+        decimal actual = RoundingCalculator.SpreadAndRound(Settings, amount, payPeriod);
 
         Assert.Equal(expected, actual);
     }

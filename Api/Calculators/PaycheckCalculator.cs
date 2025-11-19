@@ -10,15 +10,19 @@ namespace Api.Calculators;
 /// </summary>
 public class PaycheckCalculator
 {
+    private readonly CalculatorConfiguration _settings;
     private readonly Employee _employee;
     private readonly DateTime _checkDate;
     private readonly int _payPeriod;
 
-    public PaycheckCalculator(Employee employee, DateTime date)
+    public PaycheckCalculator(CalculatorConfiguration settings, Employee employee, DateTime date)
     {
+        _settings = settings;
         _employee = employee;
-        _checkDate = PayPeriodCalculator.GetLastDayInPayPeriod(date);
-        _payPeriod = PayPeriodCalculator.GetPayPeriod(_checkDate);
+
+        var payPeriodCalculator = new PayPeriodCalculator(settings);
+        _checkDate = payPeriodCalculator.GetLastDayInPayPeriod(date);
+        _payPeriod = payPeriodCalculator.GetPayPeriod(_checkDate);
     }
 
     public Paycheck Calculate()
@@ -43,7 +47,7 @@ public class PaycheckCalculator
 
         AddBaseBenefitsDeduction(deductions);
 
-        DependentValidator.ValidateDependents(_employee);
+        DependentValidator.ValidateDependents(_settings, _employee);
 
         AddDependentBenefitsDeductions(deductions);
 
@@ -58,7 +62,7 @@ public class PaycheckCalculator
     {
         deductions.Add(new()
         {
-            Amount = SpreadAndRound(1_000m),
+            Amount = SpreadAndRound(_settings.BaseBenefitsDeductionAmount),
             DeductionReason = DeductionReason.BaseBenefits,
         });
     }
@@ -69,7 +73,7 @@ public class PaycheckCalculator
         {
             deductions.Add(new()
             {
-                Amount = SpreadAndRound(600m),
+                Amount = SpreadAndRound(_settings.DependentDeductionAmount),
                 DeductionReason = DeductionReason.DependentBenefits,
                 Dependent = dependent,
             });
@@ -78,11 +82,11 @@ public class PaycheckCalculator
 
     private void AddHighIncomeDeductionIfNeeded(List<Deduction> deductions)
     {
-        if (_employee.Salary > 80_000m)
+        if (_employee.Salary > _settings.HighIncomeDeductionSalaryThreshold)
         {
             deductions.Add(new()
             {
-                Amount = SpreadAndRound(_employee.Salary * 0.02m),
+                Amount = SpreadAndRound(_employee.Salary * _settings.HighIncomeDeductionPercentage),
                 DeductionReason = DeductionReason.HighIncome,
             });
         }
@@ -92,11 +96,11 @@ public class PaycheckCalculator
     {
         foreach (var dependent in _employee.Dependents)
         {
-            if (AgeCalculator.GetAgeInYears(_checkDate, dependent.DateOfBirth) > 50)
+            if (AgeCalculator.GetAgeInYears(_checkDate, dependent.DateOfBirth) > _settings.DependentAgeDeductionYearsOldThreshold)
             {
                 deductions.Add(new()
                 {
-                    Amount = SpreadAndRound(200m),
+                    Amount = SpreadAndRound(_settings.DependentAgeDeductionAmount),
                     DeductionReason = DeductionReason.DependentAge,
                     Dependent = dependent,
                 });
@@ -106,6 +110,6 @@ public class PaycheckCalculator
 
     private decimal SpreadAndRound(decimal amount)
     {
-        return RoundingCalculator.SpreadAndRound(amount, _payPeriod);
+        return RoundingCalculator.SpreadAndRound(_settings, amount, _payPeriod);
     }
 }

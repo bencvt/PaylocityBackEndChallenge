@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ApiTests.UnitTests.Calculators;
 
-public class PayPeriodCalculatorTests
+public class PayPeriodCalculatorTests : UnitTest
 {
     [Theory]
     [InlineData("2025-01-01", 1)]
@@ -24,7 +24,9 @@ public class PayPeriodCalculatorTests
     [InlineData("2025-12-31", 26)]
     public void WhenAskedForPayPeriod_ShouldReturnCorrectValue(DateTime date, int expected)
     {
-        int actual = PayPeriodCalculator.GetPayPeriod(date);
+        var calculator = new PayPeriodCalculator(Settings);
+
+        int actual = calculator.GetPayPeriod(date);
 
         Assert.Equal(expected, actual);
     }
@@ -47,7 +49,9 @@ public class PayPeriodCalculatorTests
     [InlineData("2025-12-31", "2025-12-31")]
     public void WhenAskedForLastDayInPayPeriod_ShouldReturnCorrectValue(DateTime date, DateTime expected)
     {
-        DateTime actual = PayPeriodCalculator.GetLastDayInPayPeriod(date);
+        var calculator = new PayPeriodCalculator(Settings);
+
+        DateTime actual = calculator.GetLastDayInPayPeriod(date);
 
         Assert.Equal(expected, actual);
     }

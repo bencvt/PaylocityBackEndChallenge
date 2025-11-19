@@ -4,8 +4,13 @@ namespace Api.Calculators;
 
 public static class DependentValidator
 {
-    public static void ValidateDependents(Employee employee)
+    public static void ValidateDependents(CalculatorConfiguration settings, Employee employee)
     {
+        if (!settings.EnforceMaxOneSpouseOrDomesticPartner)
+        {
+            return;
+        }
+
         int count = employee.Dependents
             .Count(x => x.Relationship == Relationship.Spouse || x.Relationship == Relationship.DomesticPartner);
 
