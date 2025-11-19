@@ -1,4 +1,4 @@
-# Thanks in advance
+# Introduction
 
 Thanks in advance for reading these notes and the code I've written. I'm looking forward to discussing more!
 
