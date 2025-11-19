@@ -9,8 +9,8 @@ public static class PaycheckExtensions
     {
         GrossPay = source.GrossPay,
         NetPay = source.NetPay,
-        Date = source.Date,
-        PayCycle = source.PayCycle,
+        CheckDate = source.CheckDate,
+        PayPeriod = source.PayPeriod,
         Deductions = source.Deductions.ConvertToGetDeductionDtoList(),
     };
 

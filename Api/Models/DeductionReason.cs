@@ -2,6 +2,7 @@
 
 public enum DeductionReason
 {
+    Unknown,
     BaseBenefits,
     DependentBenefits,
     HighIncome,
