@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Net.Http;
 
@@ -5,7 +6,21 @@ namespace ApiTests;
 
 public class IntegrationTest : IDisposable
 {
+    private WebApplicationFactory<Program>? _factory;
     private HttpClient? _httpClient;
+
+    protected WebApplicationFactory<Program> Factory
+    {
+        get
+        {
+            if (_factory == default)
+            {
+                _factory = new();
+            }
+
+            return _factory;
+        }
+    }
 
     protected HttpClient HttpClient
     {
@@ -13,11 +28,7 @@ public class IntegrationTest : IDisposable
         {
             if (_httpClient == default)
             {
-                _httpClient = new HttpClient
-                {
-                    //task: update your port if necessary
-                    BaseAddress = new Uri("https://localhost:7124")
-                };
+                _httpClient = Factory.CreateClient();
                 _httpClient.DefaultRequestHeaders.Add("accept", "text/plain");
             }
 
@@ -27,7 +38,8 @@ public class IntegrationTest : IDisposable
 
     public void Dispose()
     {
-        HttpClient.Dispose();
+        HttpClient?.Dispose();
+        Factory?.Dispose();
     }
 }
 
