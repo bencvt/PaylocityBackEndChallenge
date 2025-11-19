@@ -52,6 +52,13 @@ public class DependentRetriever : Retriever<Dependent>
             yield return item;
         }
     }
+
+    public Dependent RetrieveById(int id)
+    {
+        // Employee will be null
+        return QueryResults.Single(x => x.Id == id);
+    }
+
     public void RetrieveForEmployee(Employee employee)
     {
         foreach (var item in QueryResults.Where(x => x.EmployeeId == employee.Id))
